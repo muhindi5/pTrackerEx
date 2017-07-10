@@ -23,7 +23,6 @@ typedef struct TargetProcess
 }Tprocess;
 /*End process structire definition*/
 
-/*global variable*/
 //processes count
 DWORD procCount;
 
@@ -37,12 +36,11 @@ void printError(TCHAR* message);
 void filterGUIThreads(DWORD threadID);
 BOOL CALLBACK enumWindowsProc(HWND hWnd, LPARAM lParam);
 
+
 /* Function definitions
 -----------------------*/
-
 /*Get all processes running on the system
-  return success state
-  */
+  return success state  */
 BOOL getProcesses(void) {
 	HANDLE hProcessSnap;
 	HANDLE hProcess;
@@ -58,10 +56,7 @@ BOOL getProcesses(void) {
 		printError((TCHAR *)TEXT("Error: CreateToolhelp32Snapshot"));
 		return (0);
 	}
-
-	//set size of the structure before using it
 	pe32.dwSize = sizeof(PROCESSENTRY32);
-
 	//retrieve information about the first process and exit if unsuccessful
 	//the structure pe32 will contain information about each sucessive process
 	if (!Process32First(hProcessSnap, &pe32)) {
@@ -91,17 +86,6 @@ BOOL getProcesses(void) {
 		//process has proprity class greater than 0; 
 		_tprintf(TEXT("\n Process ID = 0x%08X"), pe32.th32ProcessID);
 		_tprintf(TEXT("\n Thread Count = %d"), pe32.cntThreads); //number of execution thre	ads started by the proces
-		//_tprintf(TEXT("\n Parent Process ID = 0x%08X"), pe32.th32ParentProcessID); //id of the parent process
-		//_tprintf(TEXT("\n Priority Base of Proceses's threads = %d"), pe32.pcPriClassBase); //base priority of any threads created by this process
-		//_tprintf(TEXT("\n Executable path = %s"), pe32.szExeFile);// name of the executable file for the process
-
- /*Members of the PROCESSENTRY32 no longer used:
-	cntUsage : always set to 0
-	th32DefaultHeapId : always set to 0
-	th32ModuleId : always set to 0
-	dwFlags : always set to 0
-	cntUsage : always set to 0
-	*/
 		_tprintf("\nGetting thread IDs in the process------------------->\n");
 		listProcessThreads(pe32.th32ProcessID);
 		//addProcess(pe32.th32ProcessID);
@@ -116,13 +100,11 @@ BOOL listProcessThreads(DWORD dwProcessId) {
 	BOOL done = FALSE;
 	HANDLE hThreadSnapshot = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32;
-
 	//take a snapshot of all threads
 	hThreadSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
 	if (hThreadSnapshot == INVALID_HANDLE_VALUE) {
 		return (FALSE);
 	}
-
 	//fill in the structure before using it
 	te32.dwSize = sizeof(THREADENTRY32);
 
@@ -132,7 +114,6 @@ BOOL listProcessThreads(DWORD dwProcessId) {
 		CloseHandle(hThreadSnapshot);
 		return (FALSE);
 	}
-
 	//traverse the list of threads in current process 
 	do {
 		if (te32.th32OwnerProcessID == dwProcessId) {
@@ -144,9 +125,6 @@ BOOL listProcessThreads(DWORD dwProcessId) {
 	return done;
 }
 
-
-
-
 /*Print error message on failure*/
 void printError(TCHAR* message) {
 	DWORD errNum;
@@ -157,7 +135,6 @@ void printError(TCHAR* message) {
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
 		errNum, NULL, sysMessage, 256, NULL);
 	_tprintf(TEXT("\nWarning,%s failed with error %d (%s)\n"), message, errNum, sysMessage);
-
 }
 
 DWORD getProcCount(void) {

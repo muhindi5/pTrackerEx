@@ -2,8 +2,6 @@
 #define DISPATCH_H
 #define WINSOCK_DEPRECATED_NO_WARNINGS
 
-/*To prevent windows.h from including the WSA 1.1 automatically (would cause confilict with winsock2.h), 
-the macro below is defined. It prevents winsock.h from being included by the windows.h header. */
 //#ifndef WIN32_LEAN_AND_MEAN
 //#define WIN32_LEAN_AND_MEAN
 //#endif
